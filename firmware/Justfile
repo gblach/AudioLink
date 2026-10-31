@@ -1,0 +1,60 @@
+set dotenv-load
+
+# Set in .env, see README.md
+ncs_version := env('NCS_VERSION')
+ncs_dir := env('NCS_DIR', env('HOME') + "/ncs/" + ncs_version)
+board := "audiolink/nrf5340/cpuapp"
+app_dir := justfile_directory()
+
+west *args:
+    nrfutil sdk-manager toolchain launch --ncs-version {{ncs_version}} \
+        --chdir {{app_dir}} -- env ZEPHYR_BASE={{ncs_dir}}/zephyr west {{args}}
+
+build: (west "build" "-b" board "--sysbuild" "-d" "build/app" "." "--" ("-DBOARD_ROOT=" + app_dir))
+
+# Builds the firmware and bundles it into the app. The touch makes CMake read
+# VERSION again, a changed version is ignored otherwise.
+app-firmware:
+    touch {{app_dir}}/CMakeLists.txt
+    {{just_executable()}} --justfile {{justfile()}} build
+    cp {{app_dir}}/build/app/dfu_application.zip {{app_dir}}/../app/assets/
+
+# Flashes both cores. Over Bluetooth, upload build/app/dfu_application.zip with
+# nRF Connect Device Manager instead.
+flash dir="build/app": (west "flash" "-d" dir)
+
+# Updates both cores over USB through the MCUboot recovery mode
+usb-update dir="build/app":
+    uv run --script {{app_dir}}/scripts/usb_update.py {{dir}}/dfu_application.zip
+
+# Creates the image signing keys. Never overwrites, losing them means devices in
+# the field can only be updated over SWD.
+keys:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p {{app_dir}}/keys
+    for key in mcuboot-p256 b0n-p256; do
+        file={{app_dir}}/keys/$key.pem
+        if [ -e "$file" ]; then echo "$file exists, kept"; continue; fi
+        openssl ecparam -name prime256v1 -genkey -noout -out "$file"
+        chmod 600 "$file"
+        echo "created $file"
+    done
+
+# Logs come out over RTT on the SWD header (J4), Ctrl-C to stop
+rtt dir="build/app":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    nm=$(ls ~/ncs/toolchains/*/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-nm | head -1)
+    addr=$($nm {{dir}}/firmware/zephyr/zephyr.elf | awk '/ _SEGGER_RTT$/{print $1}')
+    script=$(mktemp)
+    # JLinkRTTLogger does not find the control block on this board, JLinkExe does
+    printf 'connect\nexec SetRTTAddr 0x%s\nsleep 86400000\n' "$addr" > "$script"
+    JLinkExe -Device NRF5340_XXAA_APP -If SWD -Speed 4000 -AutoConnect 1 \
+        -CommandFile "$script" > /dev/null &
+    trap 'kill $! 2>/dev/null; rm -f "$script"' EXIT
+    sleep 2
+    nc localhost 19021
+
+clean:
+    rm -rf {{app_dir}}/build

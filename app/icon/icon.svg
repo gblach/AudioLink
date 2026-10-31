@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- AudioLink app icon: a sound wave on the amber to magenta of the default LED theme -->
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff9a3c"/>
+      <stop offset="1" stop-color="#ea5fe6"/>
+    </linearGradient>
+    <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="0.15" stop-color="#fff"/>
+      <stop offset="0.85" stop-color="#fff"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="fade"><rect x="180" y="200" width="664" height="640" fill="url(#edge)"/></mask>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" rx="224" fill="url(#panel)"/>
+  <g id="content">
+    <path d="M212 512 H812" stroke="#ffffff" stroke-opacity="0.45" stroke-width="10"
+          stroke-dasharray="4 30" stroke-linecap="round"/>
+    <path d="M212 512 C262 512 287 340 362 340
+             S462 640 537 640 S637 400 712 400 S787 512 812 512 V812 H212 Z"
+          fill="url(#fill)" mask="url(#fade)"/>
+    <path d="M212 512 C262 512 287 340 362 340
+             S462 640 537 640 S637 400 712 400 S787 512 812 512"
+          fill="none" stroke="#7a2a60" stroke-opacity="0.35" stroke-width="48"
+          stroke-linecap="round" filter="url(#glow)" transform="translate(0 10)"/>
+    <path d="M212 512 C262 512 287 340 362 340
+             S462 640 537 640 S637 400 712 400 S787 512 812 512"
+          fill="none" stroke="#ffffff" stroke-width="48" stroke-linecap="round"/>
+  </g>
+</svg>

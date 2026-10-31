@@ -1,0 +1,51 @@
+#include <zephyr/dt-bindings/usb/audio.h>
+
+/ {
+	uac2_out: usb_audio2 {
+		compatible = "zephyr,uac2";
+		status = "okay";
+		full-speed;
+		audio-function = <AUDIO_FUNCTION_CONVERTER>;
+
+		uac_aclk: aclk {
+			compatible = "zephyr,uac2-clock-source";
+			clock-type = "internal-programmable";
+			frequency-control = "host-programmable";
+			sampling-frequencies = <48000>;
+		};
+
+		usb_in: usb_in {
+			compatible = "zephyr,uac2-input-terminal";
+			clock-source = <&uac_aclk>;
+			terminal-type = <USB_TERMINAL_STREAMING>;
+			front-left;
+			front-right;
+		};
+
+		line_out: line_out {
+			compatible = "zephyr,uac2-output-terminal";
+			data-source = <&usb_in>;
+			clock-source = <&uac_aclk>;
+			terminal-type = <EXTERNAL_TERMINAL_LINE_CONNECTOR>;
+		};
+
+		as_out: as_out {
+			compatible = "zephyr,uac2-audio-streaming";
+			linked-terminal = <&usb_in>;
+			subslot-size = <2>;
+			bit-resolution = <16>;
+		};
+	};
+};
+
+/ {
+	chosen {
+		zephyr,uart-mcumgr = &cdc_acm_uart0;
+	};
+};
+
+&zephyr_udc0 {
+	cdc_acm_uart0: cdc_acm_uart0 {
+		compatible = "zephyr,cdc-acm-uart";
+	};
+};

@@ -1,0 +1,94 @@
+# Firmware build (west, sysbuild)
+/firmware/build/
+
+# Local nRF Connect SDK version and path, see firmware/.env.example
+/firmware/.env
+
+# Image signing keys, created by `just keys`. Never commit them, back them up separately.
+/firmware/keys/
+
+# Copied from firmware/build/app by `just app-firmware`
+/app/assets/dfu_application.zip
+
+# Flutter app, miscellaneous
+/app/**/*.class
+/app/**/*.log
+/app/**/*.pyc
+/app/**/*.swp
+/app/**/.DS_Store
+/app/**/.atom/
+/app/**/.build/
+/app/**/.buildlog/
+/app/**/.history
+/app/**/.svn/
+/app/**/.swiftpm/
+/app/**/migrate_working_dir/
+
+# Flutter app, IntelliJ
+/app/**/*.iml
+/app/**/*.ipr
+/app/**/*.iws
+/app/**/.idea/
+
+# Flutter and Dart
+/app/**/doc/api/
+/app/**/ios/Flutter/.last_build_id
+/app/**/.dart_tool/
+/app/**/.flutter-plugins-dependencies
+/app/**/.pub-cache/
+/app/**/.pub/
+/app/build/
+/app/coverage/
+/app/linux/flutter/ephemeral/
+/app/**/.widget_preview/
+
+# Flutter symbolication and obfuscation maps
+/app/**/app.*.symbols
+/app/**/app.*.map.json
+
+# Android (Gradle, native build, Android Studio output)
+/app/android/**/gradle-wrapper.jar
+/app/android/.gradle/
+/app/android/captures/
+/app/android/gradlew
+/app/android/gradlew.bat
+/app/android/local.properties
+/app/android/**/GeneratedPluginRegistrant.java
+/app/android/**/.cxx/
+/app/android/app/debug/
+/app/android/app/profile/
+/app/android/app/release/
+
+# Android signing, never share the keystore (https://flutter.dev/to/reference-keystore)
+/app/android/**/key.properties
+/app/android/**/*.keystore
+/app/android/**/*.jks
+
+# Python and ruff caches from the scripts
+__pycache__/
+.ruff_cache/
+
+# KiCad footprint cache, rebuilt when KiCad opens the project
+/pcb/fp-info-cache
+
+# KiCad per-user view settings (open layers, zoom, window state)
+/pcb/AudioLink.kicad_prl
+
+# KiCad local history exclusions
+/pcb/.history/**/fp-info-cache
+/pcb/.history/**/*-backups/
+
+# KiCad DRC report
+/pcb/AudioLink-drc.rpt
+
+# Backup files: manual copies, editor backups, KiCad backup archives and local history
+*.bak
+*.bak-*
+*~
+*.orig
+*-backups/
+/pcb/.history/
+
+# Lock files of open documents: KiCad, LibreOffice
+*.lck
+.~lock.*#

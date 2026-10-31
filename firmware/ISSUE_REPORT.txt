@@ -1,0 +1,12 @@
+-- west flash: using runner nrfutil
+Using board 000261008584
+-- runners.nrfutil: Flashing file: /home/magik/collab/nordic/apps/AudioLink/build/app/mcuboot/zephyr/zephyr.hex
+-- runners.nrfutil: Connecting to probe
+Error: One or more batch tasks failed:
+ * 261008584: Device error: Setting the debug port SELECT register failed while powering up sys and debug regions (Unknown error in the J-Link DLL (error code =-1)).
+
+   This might indicate that the debug port is unavailable. Double-check device power supply and SWD lines, and ensure that SWD is not disabled (Generic)
+
+FATAL ERROR: command exited with status 1: nrfutil --json device x-execute-batch --batch-path /home/magik/collab/nordic/apps/AudioLink/build/app/mcuboot/zephyr/generated_nrfutil_batch.json --serial-number 261008584
+Error: Launched process exited with non-zero status: 1
+error: recipe `west` failed on line 8 with exit code 1

@@ -1,0 +1,12 @@
+/*
+ * The network core update is copied from slot3 to this RAM slot. MCUboot in
+ * overwrite mode skips the update unless both slots have the same size, and
+ * the NCS default of 256 kB does not fit next to the application slots.
+ */
+&flash_sim0 {
+	reg = <0x00000000 DT_SIZE_K(224)>;
+};
+
+&slot2_partition {
+	reg = <0x00000000 DT_SIZE_K(224)>;
+};

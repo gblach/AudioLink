@@ -1,0 +1,5 @@
+description: TI PCM5242 stereo DAC, controlled over I2C
+
+compatible: "ti,pcm5242"
+
+include: i2c-device.yaml

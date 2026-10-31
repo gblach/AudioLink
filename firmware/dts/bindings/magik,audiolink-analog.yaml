@@ -1,0 +1,29 @@
+description: AudioLink analog output stage control and jack detect lines
+
+compatible: "magik,audiolink-analog"
+
+properties:
+  power-gpios:
+    type: phandle-array
+    required: true
+    description: Enables the +/-5V_A and 3V3_A rails
+
+  mute-gpios:
+    type: phandle-array
+    required: true
+    description: PCM5242 XSMT soft mute
+
+  mode-gpios:
+    type: phandle-array
+    required: true
+    description: |
+      DG419 select. Inactive routes OUTLN to the J1 ring (balanced),
+      active routes OUTRP to it (stereo on J1).
+
+  j1-det-gpios:
+    type: phandle-array
+    required: true
+
+  j2-det-gpios:
+    type: phandle-array
+    required: true
