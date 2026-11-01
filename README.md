@@ -3,6 +3,8 @@
 AudioLink is a USB and Bluetooth LE Audio receiver with line outputs. Connect it to an amplifier
 or active speakers and play music from a computer, a phone or an Auracast broadcast.
 
+https://github.com/user-attachments/assets/b21d6140-ebe1-4f9f-b59c-d1f0c58b71b1
+
 ## Features
 
 - **Three sources:** a computer over USB, a phone over Bluetooth LE Audio, or an Auracast
