@@ -52,6 +52,7 @@ class _EqPageState extends State<EqPage> {
   List<int>? _gains;
   int? _ledMax;
   int? _ledTheme;
+  bool? _test;
   FirmwareStatus? _firmware;
   String? _error;
 
@@ -79,6 +80,7 @@ class _EqPageState extends State<EqPage> {
       final gains = await link.readGains();
       final ledMax = await link.readLedMax();
       final ledTheme = await link.readLedTheme();
+      final test = await link.readTest();
       final firmware = await _checkFirmware(link);
       if (!mounted) {
         return;
@@ -98,6 +100,7 @@ class _EqPageState extends State<EqPage> {
         _gains = gains;
         _ledMax = ledMax;
         _ledTheme = ledTheme;
+        _test = test;
         _firmware = firmware;
       });
     } on TimeoutException {
@@ -191,6 +194,25 @@ class _EqPageState extends State<EqPage> {
     }
   }
 
+  Future<void> _writeTest(bool on) async {
+    setState(() => _test = on);
+
+    try {
+      await _link!.writeTest(on);
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      _showWriteError(e);
+      try {
+        final current = await _link!.readTest();
+        if (mounted) {
+          setState(() => _test = current);
+        }
+      } catch (_) {}
+    }
+  }
+
   Future<void> _updateFirmware() async {
     final firmware = _firmware!;
     final start = await showDialog<bool>(
@@ -228,6 +250,7 @@ class _EqPageState extends State<EqPage> {
     final gains = _gains;
     final ledMax = _ledMax;
     final ledTheme = _ledTheme;
+    final test = _test;
     final firmware = _firmware;
     final connected = gains != null && ledMax != null;
 
@@ -288,6 +311,14 @@ class _EqPageState extends State<EqPage> {
                     const _SectionLabel(text: 'LED THEME'),
                     _ThemePicker(theme: ledTheme, onSelected: _writeLedTheme),
                   ],
+                  if (test != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: _SectionLabel(
+                        text: 'TEST NOISE',
+                        action: Switch(value: test, onChanged: _writeTest),
+                      ),
+                    ),
                 ],
               ],
             ),

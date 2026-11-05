@@ -246,13 +246,13 @@ Notes:
 ## Release files
 
 Built firmware is kept in [`assets/`](../assets/) at the top of the repository, next to the app.
-Current release: **0.1.2**.
+Current release: **0.1.3**.
 
 | File                                                                   | Use                                                                   |
 | ---------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| [AudioLink-0.1.2-app-core.hex](../assets/AudioLink-0.1.2-app-core.hex) | New board over SWD, application core: MCUboot and app                 |
-| [AudioLink-0.1.2-net-core.hex](../assets/AudioLink-0.1.2-net-core.hex) | New board over SWD, network core: bootloader and radio                |
-| [AudioLink-0.1.2-dfu.zip](../assets/AudioLink-0.1.2-dfu.zip)           | Update over Bluetooth or USB, same as `build/app/dfu_application.zip` |
+| [AudioLink-0.1.3-app-core.hex](../assets/AudioLink-0.1.3-app-core.hex) | New board over SWD, application core: MCUboot and app                 |
+| [AudioLink-0.1.3-net-core.hex](../assets/AudioLink-0.1.3-net-core.hex) | New board over SWD, network core: bootloader and radio                |
+| [AudioLink-0.1.3-dfu.zip](../assets/AudioLink-0.1.3-dfu.zip)           | Update over Bluetooth or USB, same as `build/app/dfu_application.zip` |
 
 The commands below write the version as `<ver>`.
 

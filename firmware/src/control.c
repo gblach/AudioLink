@@ -8,6 +8,7 @@
 #include <zephyr/settings/settings.h>
 #include <zephyr/sys/atomic.h>
 
+#include "audio_out.h"
 #include "eq.h"
 #include "leds.h"
 
@@ -19,6 +20,7 @@ LOG_MODULE_REGISTER(control, LOG_LEVEL_INF);
 #define GAINS_UUID      UUID(0x6b1e0001)
 #define LED_MAX_UUID    UUID(0x6b1e0002)
 #define LED_THEME_UUID  UUID(0x6b1e0003)
+#define TEST_UUID       UUID(0x6b1e0004)
 
 #define PERM (BT_GATT_PERM_READ_ENCRYPT | BT_GATT_PERM_WRITE_ENCRYPT)
 
@@ -229,6 +231,39 @@ static ssize_t write_led_theme(struct bt_conn *conn, const struct bt_gatt_attr *
 	return len;
 }
 
+static ssize_t read_test(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf,
+			 uint16_t len, uint16_t offset)
+{
+	uint8_t on = audio_out_source() == AUDIO_SRC_TEST;
+
+	return bt_gatt_attr_read(conn, attr, buf, len, offset, &on, sizeof(on));
+}
+
+/* Not saved, so a board left in test mode is back to normal after a restart */
+static ssize_t write_test(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+			  const void *buf, uint16_t len, uint16_t offset, uint8_t flags)
+{
+	uint8_t on;
+
+	if (offset != 0) {
+		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
+	}
+
+	if (len != sizeof(on)) {
+		return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+	}
+
+	on = *(const uint8_t *)buf;
+	if (on > 1) {
+		return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED);
+	}
+
+	audio_out_request(AUDIO_SRC_TEST, on);
+	LOG_INF("Test mode %s", on ? "on" : "off");
+
+	return len;
+}
+
 BT_GATT_SERVICE_DEFINE(control_svc, BT_GATT_PRIMARY_SERVICE(SVC_UUID),
 		       BT_GATT_CHARACTERISTIC(GAINS_UUID, BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE,
 					      PERM, read_gains, write_gains, NULL),
@@ -241,4 +276,8 @@ BT_GATT_SERVICE_DEFINE(control_svc, BT_GATT_PRIMARY_SERVICE(SVC_UUID),
 					      PERM, read_led_theme, write_led_theme, NULL),
 		       BT_GATT_CUD("LED theme: 0 amber/magenta, 1 blue/cyan, 2 green/lime, "
 				   "3 amber/yellow",
+				   BT_GATT_PERM_READ),
+		       BT_GATT_CHARACTERISTIC(TEST_UUID, BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE,
+					      PERM, read_test, write_test, NULL),
+		       BT_GATT_CUD("Test mode: 0 off, 1 pink noise bursts with a level sweep",
 				   BT_GATT_PERM_READ));

@@ -12,5 +12,6 @@ target_sources(app PRIVATE
   src/le_audio.c
   src/leds.c
   src/main.c
+  src/test_signal.c
   src/usb_audio.c
 )

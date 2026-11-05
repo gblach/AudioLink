@@ -12,6 +12,7 @@
 #include <hal/nrf_clock.h>
 
 #include "eq.h"
+#include "test_signal.h"
 
 LOG_MODULE_REGISTER(audio_out, LOG_LEVEL_INF);
 
@@ -93,7 +94,7 @@ static void select_source(void)
 	enum audio_src src = AUDIO_SRC_NONE;
 	atomic_val_t req = atomic_get(&requested);
 
-	for (int i = AUDIO_SRC_USB; i > AUDIO_SRC_NONE; i--) {
+	for (int i = AUDIO_SRC_TEST; i > AUDIO_SRC_NONE; i--) {
 		if (req & BIT(i)) {
 			src = i;
 			break;
@@ -212,6 +213,9 @@ static void fill_block(int32_t *out)
 
 	if (src == AUDIO_SRC_NONE) {
 		playing = false;
+	} else if (src == AUDIO_SRC_TEST) {
+		playing = false;
+		test_signal_fill(pcm, BLOCK_FRAMES);
 	} else if (!playing && fill >= start_level[src]) {
 		playing = true;
 	}

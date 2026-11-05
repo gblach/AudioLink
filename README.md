@@ -38,14 +38,14 @@ https://github.com/user-attachments/assets/b21d6140-ebe1-4f9f-b59c-d1f0c58b71b1
 
 ## Release files
 
-Current release: **0.1.2**.
+Current release: **0.1.3**.
 
 | File                                                                | Use                                                     |
 | ------------------------------------------------------------------- | ------------------------------------------------------- |
-| [AudioLink-0.1.2.apk](assets/AudioLink-0.1.2.apk)                   | Android app                                             |
-| [AudioLink-0.1.2-dfu.zip](assets/AudioLink-0.1.2-dfu.zip)           | Firmware update over Bluetooth or USB                   |
-| [AudioLink-0.1.2-app-core.hex](assets/AudioLink-0.1.2-app-core.hex) | New board over SWD, application core (MCUboot and app)  |
-| [AudioLink-0.1.2-net-core.hex](assets/AudioLink-0.1.2-net-core.hex) | New board over SWD, network core (bootloader and radio) |
+| [AudioLink-0.1.3.apk](assets/AudioLink-0.1.3.apk)                   | Android app                                             |
+| [AudioLink-0.1.3-dfu.zip](assets/AudioLink-0.1.3-dfu.zip)           | Firmware update over Bluetooth or USB                   |
+| [AudioLink-0.1.3-app-core.hex](assets/AudioLink-0.1.3-app-core.hex) | New board over SWD, application core (MCUboot and app)  |
+| [AudioLink-0.1.3-net-core.hex](assets/AudioLink-0.1.3-net-core.hex) | New board over SWD, network core (bootloader and radio) |
 
 The version is set in `firmware/VERSION`. The commands below write it as `<ver>`.
 
@@ -60,7 +60,7 @@ The version is set in `firmware/VERSION`. The commands below write it as `<ver>`
    - **From a computer:** select the "AudioLink" sound card.
    - **From a phone:** pair "AudioLink" in the Bluetooth settings. The phone must support LE
      Audio (classic Bluetooth A2DP and iPhones are not supported).
-4. Install the [Android app](assets/AudioLink-0.1.2.apk) to set the equalizer and the LEDs.
+4. Install the [Android app](assets/AudioLink-0.1.3.apk) to set the equalizer and the LEDs.
 
 Without a connected phone, the board joins the first Auracast broadcast it finds.
 
@@ -158,7 +158,7 @@ Bundle the current firmware into the app, then build it with Flutter:
 
 ```
 cd firmware && just app-firmware
-cd ../app && flutter build apk
+cd ../app && flutter build apk --target-platform android-arm64
 ```
 
 ### Release files

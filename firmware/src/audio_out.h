@@ -12,6 +12,8 @@ enum audio_src {
 	AUDIO_SRC_NONE,
 	AUDIO_SRC_BLE,
 	AUDIO_SRC_USB,
+	/* Generated on the board, overrides the others while the app has test mode on */
+	AUDIO_SRC_TEST,
 };
 
 int audio_out_init(void);

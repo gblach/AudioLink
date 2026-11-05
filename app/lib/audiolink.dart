@@ -11,6 +11,7 @@ const serviceUuid = '6b1e0000-7a3c-4f5e-9d2a-3c8f1b6e4a20';
 const gainsUuid = '6b1e0001-7a3c-4f5e-9d2a-3c8f1b6e4a20';
 const ledMaxUuid = '6b1e0002-7a3c-4f5e-9d2a-3c8f1b6e4a20';
 const ledThemeUuid = '6b1e0003-7a3c-4f5e-9d2a-3c8f1b6e4a20';
+const testUuid = '6b1e0004-7a3c-4f5e-9d2a-3c8f1b6e4a20';
 
 const bandLabels = ['60 Hz', '250 Hz', '1 kHz', '4 kHz', '12 kHz'];
 const gainMaxDb = 6;
@@ -80,12 +81,13 @@ Future<BleDevice> _find() async {
 }
 
 class AudioLink {
-  AudioLink._(this.device, this._gains, this._ledMax, this._ledTheme);
+  AudioLink._(this.device, this._gains, this._ledMax, this._ledTheme, this._test);
 
   final BleDevice device;
   final BleCharacteristic _gains;
   final BleCharacteristic _ledMax;
   final BleCharacteristic? _ledTheme;
+  final BleCharacteristic? _test;
 
   static Future<AudioLink> connect() async {
     await UniversalBle.requestPermissions();
@@ -107,6 +109,7 @@ class AudioLink {
       await device.getCharacteristic(gainsUuid, service: serviceUuid),
       await device.getCharacteristic(ledMaxUuid, service: serviceUuid),
       await _optionalCharacteristic(device, ledThemeUuid),
+      await _optionalCharacteristic(device, testUuid),
     );
   }
 
@@ -154,6 +157,20 @@ class AudioLink {
   }
 
   Future<void> writeLedTheme(int theme) => _ledTheme!.write([theme]);
+
+  /// Null when the firmware has no test mode
+  Future<bool?> readTest() async {
+    final characteristic = _test;
+    if (characteristic == null) {
+      return null;
+    }
+
+    final on = (await characteristic.read(timeout: const Duration(seconds: 10)))[0] != 0;
+    debugPrint('Test mode $on');
+    return on;
+  }
+
+  Future<void> writeTest(bool on) => _test!.write([on ? 1 : 0]);
 
   Future<void> disconnect() => device.disconnect();
 }
